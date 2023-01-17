@@ -1,0 +1,37 @@
+.panel-components {
+  display: flex;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  justify-content: end;
+  z-index: 777;
+  right: 30%;
+}
+
+.buttons-block {
+  display: flex;
+  position: relative;
+  width: 50%;
+  height: auto;
+  justify-content: end;
+
+  button {
+    appearance: none;
+    cursor: pointer;
+    border: 0;
+    background: #a20b0b;
+    color: #fff;
+    padding: 8px 16px;
+    font-size: 12px;
+    transition: all 0.4s ease;
+    margin-right: 10px;
+  }
+
+  button:hover {
+    background: #42b983;
+  }
+
+  button.active {
+    background: #42b983;
+  }
+}

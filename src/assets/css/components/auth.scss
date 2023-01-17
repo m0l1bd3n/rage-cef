@@ -1,0 +1,26 @@
+.auth {
+  width: 100%;
+  height: 100%;
+  background: rgba(34, 72, 107, 0.5);
+  position: absolute;
+}
+
+.auth-block {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin: 100px auto 0 auto;
+  justify-content: center;
+  align-items: center;
+  width: 500px;
+  height: 500px;
+  background: rgba(80, 75, 75, 0.5);
+}
+
+.auth-block form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 80%;
+  align-items: center;
+}

@@ -1,0 +1,60 @@
+.character-selection-page {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  width: 56.48vh;
+  height: 88.51vh;
+  margin: 4.07vh auto 0 auto;
+}
+
+.selection-block_character {
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  width: 100%;
+  height: 6.48vh;
+}
+
+.items-container_item-selection {
+  display: flex;
+  position: relative;
+  width: $size-item-inventory-weight;
+  height: $size-item-inventory-height;
+  min-width: $size-item-inventory-weight;
+  min-height: $size-item-inventory-height;
+  background-color: $color-item-element-bg;
+  margin: 0 1.062vh 0 $margin-items-container-item;
+  border-radius: $border-radius-item;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.items-container_item-selection.active {
+  border: 1px solid $color-style-main;
+  box-shadow: $color-style-main_box-shadow;
+}
+
+.selection-buttons-block {
+  display: flex;
+  position: relative;
+  width: 39.16vh;
+  height: 6.48vh;
+  justify-content: space-between;
+  margin: 33.88vh auto 0 auto;
+  cursor: pointer;
+}
+
+.name-character {
+  display: flex;
+  position: relative;
+  color: $color-text-main;
+  font-size: 28px;
+  margin: 30.19vh auto 0 auto;
+}
+
+.character-button {
+  width: 26.20vh;
+  margin: 3.24vh auto 0 auto;
+  cursor: pointer;
+}

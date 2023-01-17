@@ -1,0 +1,230 @@
+.create-character {
+  display: flex;
+  position: relative;
+  width: 52.61vh;
+  height: 76.85vh;
+  margin-left: 5.55vh;
+  margin-top: 11.66vh
+}
+
+.range-value__dark span {
+  color: rgba(84, 84, 84, 1);
+  font-weight: 600;
+}
+
+//.create-character-block {
+//  display: flex;
+//  flex-direction: column;
+//  position: relative;
+//  width: 30%;
+//  height: 100%;
+//  background: rgba(34, 72, 107, 0.5);
+//
+//  h1 {
+//    color: #00ff94;
+//    font-size: 48px;
+//  }
+//
+//  .settings-face {
+//    display: flex;
+//    width: 100%;
+//    flex-direction: column;
+//    overflow-y: auto;
+//    height: auto;
+//    padding-right: 20px;
+//
+//    .input-element {
+//      display: flex;
+//      width: 100%;
+//      flex-direction: column;
+//      height: auto;
+//      padding-left: 20px;
+//
+//      label {
+//        color: white;
+//        margin-bottom: 10px;
+//        display: flex;
+//        justify-content: start;
+//      }
+//    }
+//  }
+//}
+//
+//.buttons-block-character {
+//  display: flex;
+//  position: relative;
+//  width: 100%;
+//  height: auto;
+//  justify-content: center;
+//  margin-top: 50px;
+//
+//  button {
+//    appearance: none;
+//    cursor: pointer;
+//    border: 0;
+//    background: #4209b2;
+//    color: #fff;
+//    padding: 8px 16px;
+//    font-size: 16px;
+//    transition: all 0.4s ease;
+//    margin-right: 10px;
+//  }
+//
+//  button:hover {
+//    background: #42b983;
+//  }
+//
+//  button.active {
+//    background: #42b983;
+//  }
+//}
+
+.create-character__change-type-block {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  width: 6.48vh;
+  height: 22.22vh;
+  margin-right: 1.85vh;
+  justify-content: flex-start;
+}
+
+.items-container_item-selection.items-setting-character {
+  margin-bottom: 15px;
+}
+
+.create-character__change-face-setting {
+  .items-container_item-selection {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+.title-container.create-character-title {
+  width: 100%;
+}
+
+.create-character__change-settings {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  width: 44.28vh;
+  height: 76.85vh;
+}
+
+.settings-block {
+  display: flex;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: $color-bg-block;
+  padding: 1.85vh;
+  border-radius: 0 0 $border-radius-item $border-radius-item;
+}
+
+.setting-page {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  overflow-x: auto;
+  overflow-x: hidden;
+  padding-right: 1vh;
+}
+
+.setting-block__item {
+  display: flex;
+  height: auto;
+  position: relative;
+  width: 100%;
+  flex-direction: column;
+  margin-bottom: 1.85vh;
+}
+
+.group-block {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-between;
+  align-items: end;
+
+  .setting-block__item {
+    width: 47%;
+  }
+}
+
+.item-setting_title {
+  display: flex;
+  position: relative;
+  font-size: 1.4vh;
+  margin-bottom: 1vh;
+  color: $color-text-title-item;
+}
+
+.item-setting_input {
+  display: flex;
+  position: relative;
+  width: 100%;
+  height: 6.48vh;
+  border-radius: $border-radius-item;
+  background-color: $color-item-element-bg;
+  align-items: center;
+  padding: 1vh;
+}
+
+.item-setting-block {
+  display: flex;
+  position: relative;
+  width: 17.87vh;
+  height: 17.87vh;
+  border-radius: $border-radius-item;
+  background-color: $color-item-element-bg;
+}
+
+.input-text {
+  display: flex;
+  width: 100%;
+  height: 2vh;
+}
+
+.input-range {
+  display: flex;
+  width: 100%;
+  color: $color-style-main;
+}
+
+.color-block {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  height: auto;
+}
+
+.item-color-setting {
+  display: flex;
+  position: relative;
+  width: 4.16vh;
+  height: 4.16vh;
+  background-color: $color-item-element-icon;
+  border-radius: $border-radius-item;
+}
+
+.range-value {
+  display: flex;
+  position: relative;
+  width: 100%;
+  height: auto;
+  justify-content: space-between;
+
+  span {
+    font-size: 1.3vh;
+  }
+}
+
+.icon-image {
+  margin-right: 1vh;
+}
+
+

@@ -1,0 +1,272 @@
+.login-page {
+  display: flex;
+  position: relative;
+  margin: 19.26vh auto;
+  width: 108.52vh;
+  height: 61.39vh;
+  background-color: rgba(23, 24, 28, 0.9);
+  border-radius: $border-radius-item;
+}
+
+.main-container {
+  display: flex;
+  width: 50%;
+  flex-direction: column;
+  border-radius: $border-radius-item 0 0 $border-radius-item;
+}
+
+.image-container {
+  display: flex;
+  position: relative;
+  width: 50%;
+}
+
+.image-container img {
+  width: 100%;
+  height: 100%;
+}
+
+.switch-buttons {
+  display: flex;
+  position: relative;
+  width: 100%;
+  height: 6.20vh;
+  background-color: rgba(31, 33, 38, 0.9);
+  border-radius: $border-radius-item 0 0 0;
+}
+
+.button-registration {
+  display: flex;
+  width: 50%;
+  justify-content: center;
+  align-items: center;
+  border-radius: $border-radius-item 0 0 0;
+  cursor: pointer;
+}
+
+.button-auth {
+  display: flex;
+  width: 50%;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.form {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding: 3.7vh 5.55vh;
+  border-radius: 0 0 0 $border-radius-item;
+}
+
+.input-block {
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  height: 7.87vh;
+  background-color: rgba(0, 0, 0, 0.3);
+  margin-bottom: 2.31vh;
+  border-radius: $border-radius-item;
+}
+
+.icon-block {
+  display: flex;
+  position: relative;
+  width: 6.94vh;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon-block img {
+  display: flex;
+  position: relative;
+  width: 3.24vh;
+  height: 3.24vh;
+}
+
+.value-block {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  width: 75%;
+}
+
+.value-block label {
+  font-size: 1.47vh;
+  color: $color-text-secondary;
+}
+
+.value-block input {
+  appearance: none;
+  background: none;
+  border: none;
+  outline: none;
+  font-size: 2.37vh;
+  color: #FFFFFF;
+  margin-top: 0.2vh
+}
+
+.button-confirm {
+  display: flex;
+  position: relative;
+  width: 100%;
+  height: 6.02vh;
+  justify-content: center;
+  align-items: center;
+  background-color: $color-style-main;
+  border-radius: $border-radius-item;
+  margin-top: 0.5vh;
+  cursor: pointer;
+  transition: ease all 0.3s;
+
+  &:hover {
+    background-color: #42b983;
+  }
+}
+
+.form-auth {
+  padding-top: 12.04vh;
+}
+
+.input-block_helper {
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 2.31vh;
+  width: 100%;
+  margin-bottom: 3.5vh;
+}
+
+$c: #5ca8ff;
+$d: 6.25em;
+$t: .35s;
+
+.save-me {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  .custom-checkbox {
+    width: 2.5vh;
+    height: 2.5vh;
+
+    .label-cbx {
+      user-select: none;
+      cursor: pointer;
+    }
+    .label-cbx input:checked + .checkbox {
+      border-color: $color-style-main;
+    }
+    .label-cbx input:checked + .checkbox svg path {
+      fill: none;
+    }
+    .label-cbx input:checked + .checkbox svg polyline {
+      stroke-dashoffset: 0;
+    }
+    .label-cbx:hover .checkbox svg path {
+      stroke-dashoffset: 0;
+    }
+    .label-cbx .checkbox {
+      position: relative;
+      top: 2px;
+      float: left;
+      margin-right: 8px;
+      width: 2.5vh;
+      height: 2.5vh;
+      border: 2px solid $color-style-main;
+      border-radius: 3px;
+    }
+    .label-cbx .checkbox svg {
+      position: absolute;
+      top: -2px;
+      left: -2px;
+    }
+    .label-cbx .checkbox svg path {
+      fill: none;
+
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 71px;
+      stroke-dashoffset: 71px;
+      transition: all 0.6s ease;
+    }
+    .label-cbx .checkbox svg polyline {
+      fill: none;
+      stroke: $color-style-main;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 18px;
+      stroke-dashoffset: 18px;
+      transition: all 0.3s ease;
+    }
+    .label-cbx > span {
+      pointer-events: none;
+      vertical-align: middle;
+    }
+
+    .cntr {
+      position: absolute;
+      top: 45%;
+      left: 0;
+      width: 100%;
+      text-align: center;
+    }
+
+    .invisible {
+      position: absolute;
+      z-index: -1;
+      width: 0;
+      height: 0;
+      opacity: 0;
+    }
+  }
+
+  p {
+    font-size: 1.7vh;
+    margin-left: 0.5vh;
+    color: $color-text-main;
+    margin-top: 2.2vh;
+  }
+}
+
+.forgot-pass {
+  font-size: 1.5vh;
+  color: $color-text-secondary;
+  cursor: pointer;
+  transition: all ease 0.3s;
+  &:hover {
+    color: $color-style-main
+  }
+}
+
+.recovery-form {
+    display: flex;
+    position: relative;
+    margin: 19.26vh auto;
+    width: 54.26vh;
+    height: 33.98vh;
+    background-color: rgba(23, 24, 28, 0.9);
+    border-radius: $border-radius-item;
+}
+
+.title-block {
+  position: relative;
+  margin: 0 auto 20px auto;
+  font-size: 2.25vh;
+}
+
+.sub-title_block {
+  position: relative;
+  margin: 0 auto 20px auto;
+  font-size: 1.35vh;
+}
