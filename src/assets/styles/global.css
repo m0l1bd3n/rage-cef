@@ -1,0 +1,25 @@
+@import url("/src/assets/fonts/stylesheet.css");
+
+:root {
+    --primary-bg: #151515; /* var(--primary-bg) */
+    --secondary-bg: #242424; /* var(--secondary-bg) */
+    --modal-bg: #101010; /* var(--modal-bg) */
+    --border-color: #1b1b1b; /* var(--border-color) */
+    --error-color: #e20338; /* var(--error-color) */
+    --text-color: #fff; /* var(--text-color) */
+    --text-color-rgb: 255, 255, 255; /* var(--text-color-rgb) */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Gilroy", sans-serif;
+}
+
+html, body {
+    height: 100%;
+    font-family: "Gilroy", sans-serif;
+    background-color: rgba(16, 16, 16, 0.90);
+    color: var(--text-color);
+}

@@ -4,6 +4,7 @@
       :style="{ backgroundImage: `url(${backgroundImage})` }"
       @keydown.space="navigateToSignUp"
       tabindex="0"
+      aria-label="Нажмите пробел для продолжения"
   >
     <div class="intro-content">
       <div class="server-title">DeLiRiUm</div>
@@ -24,27 +25,18 @@
 <script>
 import backgroundImage from '@/assets/images/background.jpeg';
 
-// Простая реализация debounce
-function debounce(func, wait) {
-  let timeout;
-  return function (...args) {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => func.apply(this, args), wait);
-  };
-}
-
 export default {
   name: 'Intro',
   data() {
-    return {
-      backgroundImage
-    };
+    return { backgroundImage };
   },
   methods: {
+    navigateToSignUp: debounce(function () {
+      this.checkSession();
+    }, 200),
     checkSession() {
-      // Пример: получаем данные от alt:V или localStorage
-      const hasSession = localStorage.getItem('userSession'); // Замените на реальную проверку
-      const isFirstLogin = !localStorage.getItem('hasLoggedIn'); // Пример флага первого входа
+      const hasSession = localStorage.getItem('userSession');
+      const isFirstLogin = !localStorage.getItem('hasLoggedIn');
 
       if (hasSession) {
         this.$router.push('/select-character');
@@ -54,11 +46,17 @@ export default {
         this.$router.push('/login');
       }
     },
-    navigateToSignUp: debounce(function() {
-      this.checkSession();
-    }, 200)
-  }
+  },
 };
+
+// Вынесенная утилита debounce
+function debounce(func, wait) {
+  let timeout;
+  return function (...args) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(this, args), wait);
+  };
+}
 </script>
 
 <style scoped>
@@ -74,7 +72,7 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: var(--text-color);
 }
 
 .server-title {
@@ -101,7 +99,7 @@ export default {
 }
 
 .space-prompt span {
-  background-color: white;
+  background-color: var(--text-color);
   color: #000;
   padding: 0 15px;
   border-radius: 15px;
@@ -109,7 +107,7 @@ export default {
 
 .disclaimer {
   width: min(700px, 90vw);
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(var(--text-color-rgb), 0.75);
   font-size: 20px;
   font-weight: 700;
   line-height: 1.3;
@@ -117,22 +115,12 @@ export default {
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(50px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
+  from { opacity: 0; transform: translateY(50px); }
+  to { opacity: 1; transform: none; }
 }
 
 @keyframes bounce {
-  from {
-    transform: translateY(0);
-  }
-  to {
-    transform: translateY(-15px);
-  }
+  from { transform: translateY(0); }
+  to { transform: translateY(-15px); }
 }
 </style>

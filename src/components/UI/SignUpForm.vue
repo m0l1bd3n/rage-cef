@@ -1,28 +1,28 @@
 <template>
   <form @submit.prevent="submitForm" class="auth-form">
     <form-input
+        v-model="form.email"
         type="email"
         placeholder="Введите почту"
         :rules="[requiredRule, emailRule]"
-        @input="form.email = $event"
     />
     <form-input
+        v-model="form.password"
         type="password"
         placeholder="Введите пароль"
         :rules="[requiredRule, passwordRule]"
-        @input="form.password = $event"
     />
     <form-input
+        v-model="form.confirmPassword"
         type="password"
         placeholder="Повторите пароль"
         :rules="[requiredRule, confirmPasswordRule]"
-        @input="form.confirmPassword = $event"
     />
     <form-input
+        v-model="form.promoCode"
         type="text"
         placeholder="Введите промокод"
         :rules="[promoCodeRule]"
-        @input="form.promoCode = $event"
     />
     <div class="checkbox-group">
       <checkbox-item v-model="form.isCheckedRules" :has-error="submitted && !form.isCheckedRules">
@@ -57,22 +57,35 @@ export default {
       confirmPassword: '',
       promoCode: '',
       isCheckedRules: false,
-      isCheckedAge: false
+      isCheckedAge: false,
     },
-    submitted: false
+    submitted: false,
   }),
   computed: {
-    requiredRule: () => v => v ? '' : 'Поле не должно быть пустым',
-    promoCodeRule: () => v => v.length > 0 ? '' : '',
-    emailRule: () => v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? '' : 'Некорректная почта',
-    passwordRule: () => v => (v.length >= 6 && v.length <= 32) ? '' : 'Пароль должен быть от 6 до 32 символов',
+    requiredRule() {
+      return (v) => (v ? '' : 'Поле не должно быть пустым');
+    },
+    promoCodeRule() {
+      return (v) => (v.length > 0 ? '' : ''); // Промокод необязателен
+    },
+    emailRule() {
+      return (v) => (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? '' : 'Некорректная почта');
+    },
+    passwordRule() {
+      return (v) => (v.length >= 6 && v.length <= 32 ? '' : 'Пароль должен быть от 6 до 32 символов');
+    },
     confirmPasswordRule() {
-      return v => v === this.form.password ? '' : 'Пароли не совпадают';
+      return (v) => (v === this.form.password ? '' : 'Пароли не совпадают');
     },
     isFormValid() {
-      return this.form.email && this.form.password && this.form.confirmPassword &&
-          this.form.isCheckedRules && this.form.isCheckedAge;
-    }
+      return (
+          this.emailRule(this.form.email) === '' &&
+          this.passwordRule(this.form.password) === '' &&
+          this.confirmPasswordRule(this.form.confirmPassword) === '' &&
+          this.form.isCheckedRules &&
+          this.form.isCheckedAge
+      );
+    },
   },
   methods: {
     submitForm() {
@@ -80,8 +93,8 @@ export default {
       if (this.isFormValid) {
         this.$emit('submit', { ...this.form });
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -99,8 +112,11 @@ export default {
   font-weight: 600;
   cursor: pointer;
   border: 1px solid transparent;
+  transition: all 0.3s ease-in-out;
 }
 
-.button-submit { background: #151515; border-color: #1b1b1b; color: #fff; }
-.button-cancel { background: #151515; border-color: #e20338; color: #fff; }
+.button-submit { background: var(--primary-bg); border-color: var(--border-color); color: var(--text-color); }
+.button-submit:hover { background: var(--secondary-bg); }
+.button-cancel { background: var(--primary-bg); border-color: var(--error-color); color: var(--text-color); }
+.button-cancel:hover { background: var(--error-color); color: var(--text-color); }
 </style>

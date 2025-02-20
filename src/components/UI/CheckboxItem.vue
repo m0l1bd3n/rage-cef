@@ -30,6 +30,7 @@ export default {
 </script>
 
 <style scoped>
+
 .checkbox-item {
   display: flex;
   align-items: center;

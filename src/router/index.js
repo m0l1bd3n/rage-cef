@@ -1,16 +1,13 @@
-import { createRouter, createWebHashHistory } from 'vue-router'; // Импортируем createWebHashHistory
-import Intro from '@/views/Intro.vue';
-import SignUp from '@/views/SignUp.vue';
-import Login from '@/views/Login.vue';
+import { createRouter, createWebHashHistory } from 'vue-router';
 
 const routes = [
-    { path: '/', component: Intro },
-    { path: '/sign-up', component: SignUp },
-    { path: '/login', component: Login },
+    { path: '/', component: () => import('@/views/Intro.vue') },
+    { path: '/sign-up', component: () => import('@/views/SignUp.vue') },
+    { path: '/login', component: () => import('@/views/Login.vue') },
 ];
 
 const router = createRouter({
-    history: createWebHashHistory(), // Используем hash mode
+    history: createWebHashHistory(),
     routes,
 });
 
