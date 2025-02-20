@@ -22,18 +22,14 @@
 </template>
 
 <script>
-import backgroundImage from '@/assets/images/back1.jpeg';
+import backgroundImage from '@/assets/images/background.jpeg';
 
 // Простая реализация debounce
 function debounce(func, wait) {
   let timeout;
-  return function executedFunction(...args) {
-    const later = () => {
-      clearTimeout(timeout);
-      func(...args);
-    };
+  return function (...args) {
     clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
+    timeout = setTimeout(() => func.apply(this, args), wait);
   };
 }
 
@@ -45,8 +41,21 @@ export default {
     };
   },
   methods: {
+    checkSession() {
+      // Пример: получаем данные от alt:V или localStorage
+      const hasSession = localStorage.getItem('userSession'); // Замените на реальную проверку
+      const isFirstLogin = !localStorage.getItem('hasLoggedIn'); // Пример флага первого входа
+
+      if (hasSession) {
+        this.$router.push('/select-character');
+      } else if (isFirstLogin) {
+        this.$router.push('/sign-up');
+      } else {
+        this.$router.push('/login');
+      }
+    },
     navigateToSignUp: debounce(function() {
-      this.$router.push('/sign-up');
+      this.checkSession();
     }, 200)
   }
 };
