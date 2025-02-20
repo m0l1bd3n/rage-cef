@@ -1,8 +1,14 @@
-import { createStore } from "vuex";
+import { createStore } from 'vuex'
+
 export default createStore({
-    state: {},
-    mutations: {},
-    actions: {},
-    modules: {},
-});
-//# sourceMappingURL=index.js.map
+  state: {
+  },
+  getters: {
+  },
+  mutations: {
+  },
+  actions: {
+  },
+  modules: {
+  }
+})
