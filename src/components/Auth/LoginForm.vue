@@ -1,16 +1,18 @@
 <template>
-  <form @submit.prevent="submitForm" class="auth-form">
+  <div class="auth-container">
     <form-input
         v-model="form.login"
         type="text"
         placeholder="Введите логин"
         :rules="[requiredRule, loginRule]"
+        :show-error="submitted"
     />
     <form-input
         v-model="form.password"
         type="password"
         placeholder="Введите пароль"
         :rules="[requiredRule, passwordRule]"
+        :show-error="submitted"
     />
     <div class="checkbox-group">
       <checkbox-item v-model="form.isCheckedDamp">
@@ -18,14 +20,14 @@
       </checkbox-item>
     </div>
     <div class="form-actions">
-      <button type="submit" class="button button-submit" :disabled="!isFormValid">
+      <button class="button button-submit" @click="submitData">
         Авторизоваться
       </button>
-      <button type="button" class="button button-cancel" @click="$router.push('/')">
+      <button class="button button-cancel" @click="$router.push('/')">
         Отмена
       </button>
     </div>
-  </form>
+  </div>
 </template>
 
 <script>
@@ -41,6 +43,7 @@ export default {
       password: '',
       isCheckedDamp: false,
     },
+    submitted: false, // Добавлено для управления ошибками
   }),
   computed: {
     requiredRule() {
@@ -57,7 +60,8 @@ export default {
     },
   },
   methods: {
-    submitForm() {
+    submitData() {
+      this.submitted = true; // Ошибки отображаются после клика
       if (this.isFormValid) {
         this.$emit('submit', { ...this.form });
       }
@@ -67,9 +71,22 @@ export default {
 </script>
 
 <style scoped>
-.auth-form { display: flex; flex-direction: column; gap: 1.25rem; }
-.checkbox-group { display: flex; flex-direction: column; gap: 0.625rem; }
-.form-actions { display: flex; gap: 0.625rem; }
+.auth-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.625rem;
+}
 
 .button {
   flex: 1;
@@ -80,11 +97,27 @@ export default {
   font-weight: 600;
   cursor: pointer;
   border: 1px solid transparent;
-  transition: all 0.3s ease-in-out; /* Добавлена анимация */
+  transition: all 0.3s ease-in-out;
 }
 
-.button-submit { background: var(--secondary-bg); border-color: var(--border-color); color: var(--text-color); }
-.button-submit:hover { background: var(--secondary-bg); }
-.button-cancel { background: var(--primary-bg); border-color: var(--error-color); color: var(--text-color); }
-.button-cancel:hover { background: var(--error-color); color:var(--text-color); }
+.button-submit {
+  background: var(--secondary-bg);
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+.button-submit:hover {
+  background: var(--primary-bg); /* Инвертировал hover для разнообразия */
+}
+
+.button-cancel {
+  background: var(--primary-bg);
+  border-color: var(--error-color);
+  color: var(--text-color);
+}
+
+.button-cancel:hover {
+  background: var(--error-color);
+  color: var(--text-color);
+}
 </style>

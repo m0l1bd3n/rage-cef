@@ -5,10 +5,9 @@
         class="field-input"
         :placeholder="placeholder"
         v-model="inputValue"
-        @blur="validateInput"
-        :class="{ 'has-error': hasError }"
+        :class="{ 'has-error': showError && hasError }"
     />
-    <p v-if="hasError" class="error-message">{{ errorMessage }}</p>
+    <p v-if="showError && hasError" class="error-message">{{ errorMessage }}</p>
   </label>
 </template>
 
@@ -20,6 +19,7 @@ export default {
     type: { type: String, default: 'text' },
     placeholder: { type: String, required: true },
     rules: { type: Array, default: () => [] },
+    showError: { type: Boolean, default: false }, // Новый проп для управления отображением ошибок
   },
   emits: ['update:modelValue', 'input'],
   data: () => ({
@@ -30,6 +30,14 @@ export default {
     inputValue: {
       get() { return this.modelValue; },
       set(value) { this.$emit('update:modelValue', value); },
+    },
+  },
+  watch: {
+    modelValue() {
+      this.validateInput(); // Валидация при изменении значения
+    },
+    showError() {
+      this.validateInput(); // Перепроверка при изменении showError
     },
   },
   methods: {
@@ -69,9 +77,19 @@ export default {
   transition: all 0.3s ease-in-out;
 }
 
-.field-input:hover { background: var(--border-color); box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
-.field-input:focus { background: var(--secondary-bg); outline: none; }
-.field-input.has-error { border-color: var(--error-color); }
+.field-input:hover {
+  background: var(--border-color);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.field-input:focus {
+  background: var(--secondary-bg);
+  outline: none;
+}
+
+.field-input.has-error {
+  border-color: var(--error-color);
+}
 
 .error-message {
   margin-left: 0.3125rem;

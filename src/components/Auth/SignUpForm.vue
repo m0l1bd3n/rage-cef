@@ -1,28 +1,32 @@
 <template>
-  <form @submit.prevent="submitForm" class="auth-form">
+  <div class="auth-container">
     <form-input
         v-model="form.email"
         type="email"
         placeholder="Введите почту"
         :rules="[requiredRule, emailRule]"
+        :show-error="submitted"
     />
     <form-input
         v-model="form.password"
         type="password"
         placeholder="Введите пароль"
         :rules="[requiredRule, passwordRule]"
+        :show-error="submitted"
     />
     <form-input
         v-model="form.confirmPassword"
         type="password"
         placeholder="Повторите пароль"
         :rules="[requiredRule, confirmPasswordRule]"
+        :show-error="submitted"
     />
     <form-input
         v-model="form.promoCode"
         type="text"
         placeholder="Введите промокод"
         :rules="[promoCodeRule]"
+        :show-error="submitted"
     />
     <div class="checkbox-group">
       <checkbox-item v-model="form.isCheckedRules" :has-error="submitted && !form.isCheckedRules">
@@ -33,14 +37,14 @@
       </checkbox-item>
     </div>
     <div class="form-actions">
-      <button type="submit" class="button button-submit" :disabled="!isFormValid">
+      <button class="button button-submit" @click="submitData">
         Зарегистрироваться
       </button>
-      <button type="button" class="button button-cancel" @click="$router.push('/')">
+      <button class="button button-cancel" @click="$router.push('/')">
         Отмена
       </button>
     </div>
-  </form>
+  </div>
 </template>
 
 <script>
@@ -88,7 +92,7 @@ export default {
     },
   },
   methods: {
-    submitForm() {
+    submitData() {
       this.submitted = true;
       if (this.isFormValid) {
         this.$emit('submit', { ...this.form });
@@ -99,9 +103,22 @@ export default {
 </script>
 
 <style scoped>
-.auth-form { display: flex; flex-direction: column; gap: 1.25rem; }
-.checkbox-group { display: flex; flex-direction: column; gap: 0.625rem; }
-.form-actions { display: flex; gap: 0.625rem; }
+.auth-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.625rem;
+}
 
 .button {
   flex: 1;
@@ -115,8 +132,28 @@ export default {
   transition: all 0.3s ease-in-out;
 }
 
-.button-submit { background: var(--primary-bg); border-color: var(--border-color); color: var(--text-color); }
-.button-submit:hover { background: var(--secondary-bg); }
-.button-cancel { background: var(--primary-bg); border-color: var(--error-color); color: var(--text-color); }
-.button-cancel:hover { background: var(--error-color); color: var(--text-color); }
+.button-submit {
+  background: var(--primary-bg);
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+.button-submit:hover {
+  background: var(--secondary-bg);
+}
+
+.button-cancel {
+  background: var(--primary-bg);
+  border-color: var(--error-color);
+  color: var(--text-color);
+}
+
+.button-cancel:hover {
+  background: var(--error-color);
+  color: var(--text-color);
+}
+
+.button-submit:active {
+  transform: scale(1);
+}
 </style>
