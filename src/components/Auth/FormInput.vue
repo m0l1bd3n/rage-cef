@@ -70,7 +70,7 @@ export default {
 }
 
 .field-input:hover { background: var(--border-color); box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
-.field-input:focus { background: var(--secondary-bg); outline: none; box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2); }
+.field-input:focus { background: var(--secondary-bg); outline: none; }
 .field-input.has-error { border-color: var(--error-color); }
 
 .error-message {

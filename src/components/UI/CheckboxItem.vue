@@ -50,7 +50,7 @@ export default {
 
 .checkbox-input:checked {
   border-color: #242424;
-  background: #242424 url('@/assets/images/checkmark.svg') no-repeat center;
+  background: #242424 url('@/assets/images/UI/checkmark.svg') no-repeat center;
 }
 
 .checkbox-text {

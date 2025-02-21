@@ -2,7 +2,7 @@
   <div
       class="intro-container"
       :style="{ backgroundImage: `url(${backgroundImage})` }"
-      @keydown.space="navigateToSignUp"
+      @keydown.space="navigateToAuth"
       tabindex="0"
       aria-label="Нажмите пробел для продолжения"
   >
@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import backgroundImage from '@/assets/images/background.jpeg';
+import backgroundImage from '@/assets/images/intro/background.jpeg';
 
 export default {
   name: 'Intro',
@@ -31,7 +31,7 @@ export default {
     return { backgroundImage };
   },
   methods: {
-    navigateToSignUp: debounce(function () {
+    navigateToAuth: debounce(function () {
       this.checkSession();
     }, 200),
     checkSession() {

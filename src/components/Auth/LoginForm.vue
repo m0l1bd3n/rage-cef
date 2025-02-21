@@ -1,10 +1,10 @@
 <template>
   <form @submit.prevent="submitForm" class="auth-form">
     <form-input
-        v-model="form.email"
-        type="email"
-        placeholder="Введите почту"
-        :rules="[requiredRule, emailRule]"
+        v-model="form.login"
+        type="text"
+        placeholder="Введите логин"
+        :rules="[requiredRule, loginRule]"
     />
     <form-input
         v-model="form.password"
@@ -21,7 +21,7 @@
       <button type="submit" class="button button-submit" :disabled="!isFormValid">
         Авторизоваться
       </button>
-      <button type="button" class="button button-cancel" @click="$router.push('/intro')">
+      <button type="button" class="button button-cancel" @click="$router.push('/')">
         Отмена
       </button>
     </div>
@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import FormInput from '@/components/UI/FormInput.vue';
+import FormInput from '@/components/Auth/FormInput.vue';
 import CheckboxItem from '@/components/UI/CheckboxItem.vue';
 
 export default {
@@ -37,7 +37,7 @@ export default {
   components: { FormInput, CheckboxItem },
   data: () => ({
     form: {
-      email: '',
+      login: '',
       password: '',
       isCheckedDamp: false,
     },
@@ -46,14 +46,14 @@ export default {
     requiredRule() {
       return (v) => (v ? '' : 'Поле не должно быть пустым');
     },
-    emailRule() {
-      return (v) => (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? '' : 'Некорректная почта');
+    loginRule() {
+      return (v) => (/^[a-zA-Z0-9]{5,}$/.test(v) ? '' : 'Логин должен быть минимум 5 символов и содержать только буквы и цифры');
     },
     passwordRule() {
       return (v) => (v.length >= 6 && v.length <= 32 ? '' : 'Пароль должен быть от 6 до 32 символов');
     },
     isFormValid() {
-      return this.emailRule(this.form.email) === '' && this.passwordRule(this.form.password) === '';
+      return this.loginRule(this.form.login) === '' && this.passwordRule(this.form.password) === '';
     },
   },
   methods: {

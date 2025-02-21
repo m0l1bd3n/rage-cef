@@ -1,15 +1,15 @@
 <template>
   <base-auth-page>
     <template #message>
-      m0l1bd3n, Добро пожаловать!<br>Ваш аккаунт зарегистрирован
+      Добро пожаловать!<br>Вам необходимо авторизоваться
     </template>
     <login-form @submit="handleLogin" />
   </base-auth-page>
 </template>
 
 <script>
-import BaseAuthPage from '@/components/UI/BaseAuthPage.vue';
-import LoginForm from '@/components/UI/LoginForm.vue';
+import BaseAuthPage from '@/components/Auth/BaseAuthPage.vue';
+import LoginForm from '@/components/Auth/LoginForm.vue';
 
 export default {
   name: 'LoginPage',

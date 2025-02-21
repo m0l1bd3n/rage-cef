@@ -36,7 +36,7 @@
       <button type="submit" class="button button-submit" :disabled="!isFormValid">
         Зарегистрироваться
       </button>
-      <button type="button" class="button button-cancel" @click="$router.push('/intro')">
+      <button type="button" class="button button-cancel" @click="$router.push('/')">
         Отмена
       </button>
     </div>
@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import FormInput from '@/components/UI/FormInput.vue';
+import FormInput from '@/components/Auth/FormInput.vue';
 import CheckboxItem from '@/components/UI/CheckboxItem.vue';
 
 export default {
