@@ -1,7 +1,7 @@
 <template>
   <div class="auth-container">
     <header class="auth-header">
-      <h1 class="server-title">ARCHWAY</h1>
+      <h1 class="server-title">DeLiRiUm</h1>
     </header>
     <main class="auth-modal">
       <p class="welcome-message" lang="ru">
