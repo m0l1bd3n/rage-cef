@@ -5,9 +5,9 @@
         class="field-input"
         :placeholder="placeholder"
         v-model="inputValue"
-        :class="{ 'has-error': showError && hasError }"
+        :class="{ 'has-error': hasError }"
     />
-    <p v-if="showError && hasError" class="error-message">{{ errorMessage }}</p>
+    <p v-if="hasError" class="error-message">{{ displayedErrorMessage }}</p>
   </label>
 </template>
 
@@ -19,7 +19,8 @@ export default {
     type: { type: String, default: 'text' },
     placeholder: { type: String, required: true },
     rules: { type: Array, default: () => [] },
-    showError: { type: Boolean, default: false }, // Новый проп для управления отображением ошибок
+    showError: { type: Boolean, default: false }, // Управляет отображением ошибок
+    externalError: { type: String, default: '' }, // Новый проп для внешних ошибок от сервера
   },
   emits: ['update:modelValue', 'input'],
   data: () => ({
@@ -31,6 +32,10 @@ export default {
       get() { return this.modelValue; },
       set(value) { this.$emit('update:modelValue', value); },
     },
+    displayedErrorMessage() {
+      // Приоритет внешней ошибки над внутренней валидацией
+      return this.showError && this.externalError ? this.externalError : this.errorMessage;
+    },
   },
   watch: {
     modelValue() {
@@ -39,9 +44,19 @@ export default {
     showError() {
       this.validateInput(); // Перепроверка при изменении showError
     },
+    externalError() {
+      // Обновляем hasError, если есть внешняя ошибка
+      this.hasError = this.showError && (this.externalError !== '' || this.errorMessage !== '');
+    },
   },
   methods: {
     validateInput() {
+      // Проверяем правила только если нет внешней ошибки
+      if (!this.showError || this.externalError) {
+        this.hasError = this.externalError !== '';
+        this.errorMessage = '';
+        return;
+      }
       this.hasError = false;
       this.errorMessage = '';
       for (const rule of this.rules) {

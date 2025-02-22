@@ -7,6 +7,7 @@
         placeholder="Введите логин"
         :rules="[requiredRule, loginRule]"
         :show-error="submitted"
+        :external-error="loginError"
     />
     <form-input
         v-model="form.email"
@@ -58,7 +59,6 @@
 <script>
 import FormInput from '@/components/Auth/FormInput.vue';
 import CheckboxItem from '@/components/UI/CheckboxItem.vue';
-import rpc from "rage-rpc";
 
 export default {
   name: 'SignUpForm',
@@ -74,6 +74,7 @@ export default {
       isCheckedAge: false,
     },
     submitted: false,
+    loginError: '', // Состояние для хранения ошибки логина от сервера
   }),
   computed: {
     requiredRule() {
@@ -105,18 +106,28 @@ export default {
       );
     },
   },
+  mounted() {
+    // Регистрируем слушатель события validation.exception
+    this.$rpc.register('validation.exception', (data) => {
+      console.log('Received validation exception:', data);
+      if (data.errors && data.errors.login) {
+        this.loginError = data.errors.login[0]; // Устанавливаем первую ошибку для логина
+      }
+    });
+  },
   methods: {
     async submitData() {
       this.submitted = true;
+      this.loginError = ''; // Сбрасываем ошибку перед отправкой
       if (this.isFormValid) {
         try {
-          const response = await rpc.callServer('authenticate.register.handle', {
+          const response = await this.$rpc.callServer('authenticate.register.handle', {
             login: this.form.login,
-            //email: this.form.email,
+            email: this.form.email,
             password: this.form.password,
-            //promoCode: this.form.promoCode,
-            //isCheckedRules: this.form.isCheckedRules,
-            //isCheckedAge: this.form.isCheckedAge
+            promoCode: this.form.promoCode,
+            isCheckedRules: this.form.isCheckedRules,
+            isCheckedAge: this.form.isCheckedAge
           });
           console.log('Registration response from Rage MP:', response);
           if (response && response.success) {
