@@ -2,7 +2,6 @@
   <div
       class="intro-container"
       :style="{ backgroundImage: `url(${backgroundImage})` }"
-      @keydown.space="navigateToAuth"
       tabindex="0"
       aria-label="Нажмите пробел для продолжения"
   >
@@ -30,7 +29,24 @@ export default {
   data() {
     return { backgroundImage };
   },
+  mounted() {
+    // Добавляем слушатель события keydown на весь документ
+    document.addEventListener('keydown', this.handleKeyDown);
+    // Устанавливаем фокус на контейнер для доступности
+    this.$el.focus();
+  },
+  beforeDestroy() {
+    // Удаляем слушатель перед уничтожением компонента
+    document.removeEventListener('keydown', this.handleKeyDown);
+  },
   methods: {
+    handleKeyDown(event) {
+      // Проверяем, что нажата клавиша Space (keyCode 32)
+      if (event.keyCode === 32) {
+        event.preventDefault(); // Предотвращаем стандартное поведение (например, прокрутку)
+        this.navigateToAuth();
+      }
+    },
     navigateToAuth: debounce(function () {
       this.checkSession();
     }, 200),
