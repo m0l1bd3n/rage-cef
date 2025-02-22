@@ -1,5 +1,13 @@
+<!-- SignUpForm.vue -->
 <template>
   <div class="auth-container">
+    <form-input
+        v-model="form.login"
+        type="text"
+        placeholder="Введите логин"
+        :rules="[requiredRule, loginRule]"
+        :show-error="submitted"
+    />
     <form-input
         v-model="form.email"
         type="email"
@@ -37,7 +45,7 @@
       </checkbox-item>
     </div>
     <div class="form-actions">
-      <button class="button button-submit" @click="submitData">
+      <button class="button button-submit" @click.prevent="submitData">
         Зарегистрироваться
       </button>
       <button class="button button-cancel" @click="$router.push('/')">
@@ -56,6 +64,7 @@ export default {
   components: { FormInput, CheckboxItem },
   data: () => ({
     form: {
+      login: '',
       email: '',
       password: '',
       confirmPassword: '',
@@ -72,6 +81,9 @@ export default {
     promoCodeRule() {
       return (v) => (v.length > 0 ? '' : ''); // Промокод необязателен
     },
+    loginRule() {
+      return (v) => (/^[a-zA-Z0-9]{5,}$/.test(v) ? '' : 'Логин должен быть минимум 5 символов и содержать только буквы и цифры');
+    },
     emailRule() {
       return (v) => (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? '' : 'Некорректная почта');
     },
@@ -83,6 +95,7 @@ export default {
     },
     isFormValid() {
       return (
+          this.loginRule(this.form.login) === '' &&
           this.emailRule(this.form.email) === '' &&
           this.passwordRule(this.form.password) === '' &&
           this.confirmPasswordRule(this.form.confirmPassword) === '' &&
@@ -92,10 +105,27 @@ export default {
     },
   },
   methods: {
-    submitData() {
+    async submitData() {
       this.submitted = true;
       if (this.isFormValid) {
-        this.$emit('submit', { ...this.form });
+        try {
+          const response = await this.$rpc.call('registerUser', {
+            login: this.form.login,
+            //email: this.form.email,
+            password: this.form.password,
+            //promoCode: this.form.promoCode,
+            //isCheckedRules: this.form.isCheckedRules,
+            //isCheckedAge: this.form.isCheckedAge
+          });
+          console.log('Registration response from Rage MP:', response);
+          if (response && response.success) {
+            this.$emit('submit', { ...this.form });
+          } else {
+            console.warn('Registration failed:', response ? response.message : 'No response');
+          }
+        } catch (error) {
+          console.error('Error calling Rage RPC:', error);
+        }
       }
     },
   },
