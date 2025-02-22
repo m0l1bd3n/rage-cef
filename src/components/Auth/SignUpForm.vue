@@ -109,7 +109,7 @@ export default {
       this.submitted = true;
       if (this.isFormValid) {
         try {
-          const response = await this.$rpc.call('registerUser', {
+          const response = await this.$rpc.call('authenticate.register.handle', {
             login: this.form.login,
             //email: this.form.email,
             password: this.form.password,
