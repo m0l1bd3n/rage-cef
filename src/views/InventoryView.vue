@@ -1,50 +1,72 @@
 <!-- InventoryView.vue -->
 <template>
-  <div
-      class="inventory-grid"
-      ref="gridRef"
-      @dragover="handleDragOver"
-      @drop="handleDrop"
-      @dragleave="handleDragLeave"
-  >
-    <!-- Фоновая сетка -->
-    <div
-        v-for="cell in gridCells"
-        :key="`cell-${cell.x}-${cell.y}`"
-        class="grid-cell"
-        :style="{ 'grid-column': cell.x, 'grid-row': cell.y }"
-    ></div>
-    <!-- Предметы -->
-    <div
-        v-for="(item, index) in items"
-        :key="`item-${item.id}`"
-        class="inventory-item"
-        :style="getItemStyle(item)"
-        :draggable="true"
-        @dragstart="handleDragStart($event, index)"
-        @dragenter="handleDragEnter($event, index)"
-        @dragend="handleDragEnd"
-        @dblclick="rotateItem(index)"
-        @contextmenu.prevent="showContextMenu($event, index)"
-    >
-      <img
-          v-if="item.image"
-          :src="item.image"
-          :alt="item.name"
-          draggable="false"
-          :style="getImageStyle(item)"
-      >
+  <div class="inventory-container">
+    <div class="button-container">
+      <button @click="addItem('Винтовка')">Добавить Винтовку</button>
+      <button @click="addItem('Бронижилет')">Добавить Бронижилет</button>
+      <button @click="addItem('Пистолет')">Добавить Пистолет</button>
+      <button @click="addItem('Аптечка')">Добавить Аптечку</button>
     </div>
-    <!-- Контекстное меню -->
-    <div
-        v-if="contextMenu.visible"
-        class="context-menu"
-        :style="{ top: contextMenu.y + 'px', left: contextMenu.x + 'px' }"
-        @click.stop
-    >
-      <div class="context-item" @click="useItem">Использовать</div>
-      <div class="context-item" @click="toQuickSlot">В быстрый слот</div>
-      <div class="context-item" @click="dropItem">Выбросить</div>
+
+    <div class="grid-and-trash">
+      <div
+          class="inventory-grid"
+          ref="gridRef"
+          @dragover="handleDragOver"
+          @drop="handleDrop"
+          @dragleave="handleDragLeave"
+      >
+        <!-- Фоновая сетка -->
+        <div
+            v-for="cell in gridCells"
+            :key="`cell-${cell.x}-${cell.y}`"
+            class="grid-cell"
+            :style="{ 'grid-column': cell.x, 'grid-row': cell.y }"
+        ></div>
+        <!-- Предметы -->
+        <div
+            v-for="(item, index) in items"
+            :key="`item-${item.id}`"
+            class="inventory-item"
+            :style="getItemStyle(item)"
+            :draggable="true"
+            @dragstart="handleDragStart($event, index)"
+            @dragenter="handleDragEnter($event, index)"
+            @dragend="handleDragEnd"
+            @dblclick="rotateItem(index)"
+            @contextmenu.prevent="showContextMenu($event, index)"
+        >
+          <img
+              v-if="item.image"
+              :src="item.image"
+              :alt="item.name"
+              draggable="false"
+              :style="getImageStyle(item)"
+          >
+        </div>
+        <!-- Контекстное меню -->
+        <div
+            v-if="contextMenu.visible"
+            class="context-menu"
+            :style="{ top: contextMenu.y + 'px', left: contextMenu.x + 'px' }"
+            @click.stop
+        >
+          <div class="context-item" @click="useItem">Использовать</div>
+          <div class="context-item" @click="toQuickSlot">В быстрый слот</div>
+          <div class="context-item" @click="dropItem">Выбросить</div>
+        </div>
+      </div>
+
+      <!-- Слот для удаления -->
+      <div
+          class="trash-slot"
+          ref="trashSlot"
+          @dragover="allowDrop"
+          @drop="deleteItem"
+          @dragleave="clearTrashHighlight"
+      >
+        Удалить
+      </div>
     </div>
   </div>
 </template>
@@ -56,6 +78,7 @@ export default {
   name: 'InventoryView',
   setup() {
     const gridRef = ref(null);
+    const trashSlot = ref(null);
 
     const state = reactive({
       items: [
@@ -72,7 +95,8 @@ export default {
         x: 0,
         y: 0,
         selectedIndex: null
-      }
+      },
+      nextId: 5 // Для уникальных ID новых предметов
     });
 
     const gridCells = computed(() => {
@@ -157,26 +181,43 @@ export default {
       event.preventDefault();
       const sourceIndex = state.draggedIndex;
       const draggedItem = state.items[sourceIndex];
-      if (!gridRef.value) {
-        console.error('Drop: Grid reference not found');
+      if (!gridRef.value || !trashSlot.value) {
+        console.error('Drop: Grid or Trash reference not found');
         return;
       }
 
-      const rect = gridRef.value.getBoundingClientRect();
-      const cursorX = Math.floor((event.clientX - rect.left) / 70) + 1;
-      const cursorY = Math.floor((event.clientY - rect.top) / 70) + 1;
-      const newX = Math.max(1, Math.min(5 - draggedItem.size_x + 1, cursorX - state.dragOffset.x));
-      const newY = Math.max(1, Math.min(10 - draggedItem.size_y + 1, cursorY - state.dragOffset.y));
+      const gridRect = gridRef.value.getBoundingClientRect();
+      const trashRect = trashSlot.value.getBoundingClientRect();
+      const cursorX = event.clientX;
+      const cursorY = event.clientY;
+
+      // Проверяем, попал ли курсор в слот для удаления
+      if (
+          cursorX >= trashRect.left &&
+          cursorX <= trashRect.right &&
+          cursorY >= trashRect.top &&
+          cursorY <= trashRect.bottom
+      ) {
+        console.log(`Deleted item: "${draggedItem.name}" via trash slot`);
+        state.items.splice(sourceIndex, 1);
+        clearHighlight();
+        state.highlightedCells = [];
+        return;
+      }
+
+      // Обрабатываем drop в сетке
+      const gridCursorX = Math.floor((cursorX - gridRect.left) / 70) + 1;
+      const gridCursorY = Math.floor((cursorY - gridRect.top) / 70) + 1;
+      const newX = Math.max(1, Math.min(5 - draggedItem.size_x + 1, gridCursorX - state.dragOffset.x));
+      const newY = Math.max(1, Math.min(10 - draggedItem.size_y + 1, gridCursorY - state.dragOffset.y));
 
       console.log(`Drop: Attempting to place "${draggedItem.name}" at (${newX}, ${newY})`);
 
-      // Проверяем, можно ли разместить предмет напрямую
       if (canPlaceItem(draggedItem, newX, newY, sourceIndex)) {
         draggedItem.x = newX;
         draggedItem.y = newY;
         console.log(`Drop Success: "${draggedItem.name}" moved to (${newX}, ${newY})`);
       } else {
-        // Ищем предмет, занимающий место
         const overlappingItemIndex = state.items.findIndex((item, idx) =>
             idx !== sourceIndex &&
             item.x <= newX && newX < item.x + item.size_x &&
@@ -187,7 +228,6 @@ export default {
           const overlappingItem = state.items[overlappingItemIndex];
           console.log(`Overlap detected with "${overlappingItem.name}" at (${overlappingItem.x}, ${overlappingItem.y})`);
 
-          // Пробуем поменять местами
           const oldX = draggedItem.x;
           const oldY = draggedItem.y;
 
@@ -197,11 +237,9 @@ export default {
           overlappingItem.x = oldX;
           overlappingItem.y = oldY;
 
-          // Проверяем, возможен ли обмен
           if (canPlaceItem(draggedItem, newX, newY, sourceIndex) && canPlaceItem(overlappingItem, oldX, oldY, overlappingItemIndex)) {
             console.log(`Swap Success: "${draggedItem.name}" to (${newX}, ${newY}), "${overlappingItem.name}" to (${oldX}, ${oldY})`);
           } else {
-            // Если обмен невозможен, ищем свободное место для вытесненного предмета
             const freeSpot = findFreeSpot(overlappingItem);
             if (freeSpot) {
               overlappingItem.x = freeSpot.x;
@@ -210,7 +248,6 @@ export default {
               draggedItem.y = newY;
               console.log(`Displacement Success: "${draggedItem.name}" to (${newX}, ${newY}), "${overlappingItem.name}" to (${freeSpot.x}, ${freeSpot.y})`);
             } else {
-              // Если свободного места нет, отменяем перемещение
               draggedItem.x = oldX;
               draggedItem.y = oldY;
               console.error(`Drop Failed: No free spot for "${overlappingItem.name}"`);
@@ -268,7 +305,7 @@ export default {
           }
         }
       }
-      return null; // Нет свободного места
+      return null;
     };
 
     const highlightCells = (color) => {
@@ -352,13 +389,67 @@ export default {
     const dropItem = () => {
       const index = state.contextMenu.selectedIndex;
       const item = state.items[index];
-      console.log(`Dropping item: ${item.name}`);
+      console.log(`Dropping item: "${item.name}"`);
       state.items.splice(index, 1);
       state.contextMenu.visible = false;
     };
 
+    const addItem = (itemName) => {
+      let newItem;
+      switch (itemName) {
+        case 'Винтовка':
+          newItem = { id: state.nextId++, name: 'Винтовка', type: 'weapon', size_x: 3, size_y: 1, image: require('@/assets/images/weapon.png'), isRotated: false };
+          break;
+        case 'Бронижилет':
+          newItem = { id: state.nextId++, name: 'Бронижилет', type: 'armor', size_x: 2, size_y: 2, image: require('@/assets/images/armor.png'), isRotated: false };
+          break;
+        case 'Пистолет':
+          newItem = { id: state.nextId++, name: 'Пистолет', type: 'secondary_weapon', size_x: 1, size_y: 1, image: require('@/assets/images/pistol.png'), isRotated: false };
+          break;
+        case 'Аптечка':
+          newItem = { id: state.nextId++, name: 'Аптечка', type: 'medkit', size_x: 2, size_y: 1, image: require('@/assets/images/medkit.webp'), isRotated: false };
+          break;
+        default:
+          return;
+      }
+
+      const freeSpot = findFreeSpot(newItem);
+      if (freeSpot) {
+        newItem.x = freeSpot.x;
+        newItem.y = freeSpot.y;
+        state.items.push(newItem);
+        console.log(`Added "${newItem.name}" at (${newItem.x}, ${newItem.y})`);
+      } else {
+        console.error(`No free spot to add "${newItem.name}"`);
+      }
+    };
+
+    const allowDrop = (event) => {
+      event.preventDefault();
+      event.target.style.background = '#ff3333'; // Подсветка при наведении
+    };
+
+    const deleteItem = (event) => {
+      event.preventDefault();
+      const index = state.draggedIndex;
+      if (index !== null) {
+        const item = state.items[index];
+        console.log(`Deleted item: "${item.name}" via trash slot`);
+        state.items.splice(index, 1);
+        state.draggedIndex = null;
+        event.target.style.background = '#303030'; // Возвращаем цвет
+      }
+      clearHighlight();
+      state.highlightedCells = [];
+    };
+
+    const clearTrashHighlight = (event) => {
+      event.target.style.background = '#303030';
+    };
+
     return {
       gridRef,
+      trashSlot,
       gridCells,
       items: state.items,
       getItemStyle,
@@ -374,13 +465,46 @@ export default {
       contextMenu: state.contextMenu,
       useItem,
       toQuickSlot,
-      dropItem
+      dropItem,
+      addItem,
+      allowDrop,
+      deleteItem,
+      clearTrashHighlight
     };
   }
 };
 </script>
 
 <style scoped>
+.inventory-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.button-container {
+  display: flex;
+  gap: 10px;
+}
+
+.button-container button {
+  padding: 10px 15px;
+  background: #404040;
+  color: white;
+  border: 1px solid #1B1B1B;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.button-container button:hover {
+  background: #505050;
+}
+
+.grid-and-trash {
+  display: flex;
+  gap: 20px;
+}
+
 .inventory-grid {
   width: 350px;
   height: 700px;
@@ -440,5 +564,18 @@ export default {
 
 .context-item:hover {
   background: #404040;
+}
+
+.trash-slot {
+  width: 70px;
+  height: 70px;
+  background: #303030;
+  border: 1px solid #1B1B1B;
+  border-radius: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 14px;
 }
 </style>
