@@ -150,6 +150,11 @@ export default {
   gap: 0.625rem;
 }
 
+a {
+  text-decoration: none;
+  color: white;
+}
+
 .button {
   flex: 1;
   padding: 0.9375rem;
