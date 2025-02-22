@@ -58,6 +58,7 @@
 <script>
 import FormInput from '@/components/Auth/FormInput.vue';
 import CheckboxItem from '@/components/UI/CheckboxItem.vue';
+import rpc from "rage-rpc";
 
 export default {
   name: 'SignUpForm',
@@ -109,7 +110,7 @@ export default {
       this.submitted = true;
       if (this.isFormValid) {
         try {
-          const response = await this.$rpc.call('authenticate.register.handle', {
+          const response = await rpc.callServer('authenticate.register.handle', {
             login: this.form.login,
             //email: this.form.email,
             password: this.form.password,
