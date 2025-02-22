@@ -20,6 +20,7 @@
   align-items: center;
   min-height: 100vh;
   padding: clamp(0.625rem, 2vw, 1.25rem);
+  background-color: rgba(0, 0, 0, 0.75);
 }
 
 .auth-header {

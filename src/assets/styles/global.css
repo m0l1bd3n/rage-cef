@@ -15,10 +15,10 @@
     padding: 0;
     box-sizing: border-box;
     font-family: "Comfortaa", sans-serif;
+    user-select: none;
 }
 
 html, body {
     height: 100%;
-    background-color: rgba(16, 16, 16, 0.90);
     color: var(--text-color);
 }
